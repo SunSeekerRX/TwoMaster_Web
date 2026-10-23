@@ -24,10 +24,14 @@ jobs:
         uses: actions/configure-pages@v5
       - name: Download and verify game
         env:
-          DOWNLOAD_URL: ${{ github.server_url }}/${{ github.repository }}/releases/download/v5.9.62/TwoMaster.html
+          DOWNLOAD_ROOT: ${{ github.server_url }}/${{ github.repository }}/releases/download/v5.9.62
         run: |
           mkdir -p public
-          curl --fail --location --retry 5 "$DOWNLOAD_URL" --output public/index.html
+          mkdir -p parts
+          for part in $(seq -w 0 11); do
+            curl --fail --location --retry 5 "$DOWNLOAD_ROOT/TwoMaster.html.gz.part$part" --output "parts/part$part"
+          done
+          cat parts/part* | gzip -dc > public/index.html
           echo '99a9ef4ac6c4706c2913d6837b95e6a0e7f295b2e7f0d3a765c85880682348f2  public/index.html' | sha256sum --check
           touch public/.nojekyll
       - name: Upload website
