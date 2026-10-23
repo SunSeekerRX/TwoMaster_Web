@@ -13,8 +13,8 @@ Two Master 5.9.62 网页试玩版。
 
 ## 发布结构
 
-游戏文件保存在 Release `v5.9.62` 的 `TwoMaster.html` 附件中。
-GitHub Actions 下载该附件，校验 SHA-256，再将其作为 `index.html` 发布到 GitHub Pages。
+游戏文件无损压缩后保存在 Release `v5.9.62` 的 12 个 `TwoMaster.html.gz.partXX` 附件中。
+GitHub Actions 下载并合并分片，解压还原 HTML，校验 SHA-256，再将其作为 `index.html` 发布到 GitHub Pages。
 仓库不包含 Unity 工程。
 
 重新部署：在 Actions 中打开 `Publish Two Master Web`，选择 `Run workflow`。
