@@ -20,20 +20,24 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - name: Check out publishing tools
+        uses: actions/checkout@v6
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Download and verify game
         env:
           DOWNLOAD_ROOT: ${{ github.server_url }}/${{ github.repository }}/releases/download/v5.9.62
         run: |
-          mkdir -p public
           mkdir -p parts
           for part in $(seq -w 0 11); do
             curl --fail --location --retry 5 "$DOWNLOAD_ROOT/TwoMaster.html.gz.part$part" --output "parts/part$part"
           done
-          cat parts/part* | gzip -dc > public/index.html
-          echo '99a9ef4ac6c4706c2913d6837b95e6a0e7f295b2e7f0d3a765c85880682348f2  public/index.html' | sha256sum --check
-          touch public/.nojekyll
+          cat parts/part* | gzip -dc > original.html
+          echo '99a9ef4ac6c4706c2913d6837b95e6a0e7f295b2e7f0d3a765c85880682348f2  original.html' | sha256sum --check
+      - name: Test and package optimized website
+        run: |
+          python3 -m unittest discover -s tools -p 'test_*.py' -v
+          python3 tools/pack_site.py --input original.html --output public
       - name: Upload website
         uses: actions/upload-pages-artifact@v4
         with:

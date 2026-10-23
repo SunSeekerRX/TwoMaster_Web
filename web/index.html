@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Two Master 5.9.62</title>
+  <link rel="icon" href="data:,">
+  <style>
+    html,body{margin:0;width:100%;height:100%;background:#111;color:#fff;font:16px system-ui,sans-serif;overflow:hidden}
+    canvas{display:block;width:100vw;height:100vh}
+    #loading{position:fixed;inset:0;display:grid;place-content:center;background:#111;text-align:center;padding:24px}
+    h1{font-size:30px;font-weight:600;letter-spacing:2px;margin:0 0 28px}
+    #status{max-width:580px;line-height:1.7;margin:0 0 12px}
+    progress{width:min(420px,80vw);height:10px;accent-color:#d4af66}
+    #hint{font-size:13px;color:#aaa;max-width:480px;line-height:1.7}
+    button{justify-self:center;background:#d4af66;color:#17130c;border:0;border-radius:4px;padding:10px 24px;font:inherit;cursor:pointer}
+    button[hidden]{display:none}
+  </style>
+</head>
+<body>
+  <canvas id="game" width="1600" height="900" tabindex="0" aria-label="Two Master 游戏"></canvas>
+  <section id="loading" aria-label="游戏加载">
+    <h1>Two Master</h1>
+    <p id="status" role="status" aria-live="polite">正在准备游戏…</p>
+    <progress id="progress" value="0" max="1" aria-label="加载进度"></progress>
+    <p id="hint">首次加载需要下载游戏资源。已下载的资源会保存在此浏览器中，之后打开会更快。</p>
+    <button id="retry" hidden>继续加载</button>
+  </section>
+  <script src="unity-loader.js"></script>
+  <script src="boot.js"></script>
+</body>
+</html>
