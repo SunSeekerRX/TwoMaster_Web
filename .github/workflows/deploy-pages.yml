@@ -1,0 +1,39 @@
+name: Publish Two Master Web
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Download and verify game
+        env:
+          DOWNLOAD_URL: ${{ github.server_url }}/${{ github.repository }}/releases/download/v5.9.62/TwoMaster.html
+        run: |
+          mkdir -p public
+          curl --fail --location --retry 5 "$DOWNLOAD_URL" --output public/index.html
+          echo '99a9ef4ac6c4706c2913d6837b95e6a0e7f295b2e7f0d3a765c85880682348f2  public/index.html' | sha256sum --check
+          touch public/.nojekyll
+      - name: Upload website
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: public
+      - name: Deploy website
+        id: deployment
+        uses: actions/deploy-pages@v4
